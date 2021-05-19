@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mspi-joke:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/mspi_joke_jar</output-path>
+    <root id="archive" name="mspi-joke.jar">
+      <element id="module-output" name="mspi-joke" />
+    </root>
+  </artifact>
+</component>
