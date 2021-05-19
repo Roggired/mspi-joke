@@ -32,16 +32,6 @@ public class Debugger {
 
         VirtualMachine vm = at.attach(arguments);
 
-        ThreadReference main = vm.allThreads()
-                .stream()
-                .filter(it -> it.name().equalsIgnoreCase("main"))
-                .findAny()
-                .orElseThrow(RuntimeException::new);
-
-//        main.suspend();
-//        main.frames().forEach(System.out::println);
-//        main.suspend();
-
         EventRequestManager erm = vm.eventRequestManager();
         ClassPrepareRequest r = erm.createClassPrepareRequest();
         r.addClassFilter("ru.kefungus.joke.App");
@@ -65,8 +55,6 @@ public class Debugger {
                         } catch (AbsentInformationException ex) {
                             throw new RuntimeException(ex);
                         }
-                        // get the last line location of the function and enable the
-                        // break point
                         Location location = locations.get(3);
                         BreakpointRequest bpReq = erm.createBreakpointRequest(location);
                         bpReq.enable();
@@ -74,13 +62,11 @@ public class Debugger {
 
                 }
                 if (event instanceof BreakpointEvent) {
-                    // disable the breakpoint event
                     event.request().disable();
 
                     ThreadReference thread = ((BreakpointEvent) event).thread();
                     StackFrame stackFrame = thread.frame(0);
 
-                    // print all the visible variables with the respective values
                     Map<LocalVariable, Value> visibleVariables = stackFrame.getValues(stackFrame.visibleVariables());
                     for (Map.Entry<LocalVariable, Value> entry : visibleVariables.entrySet()) {
                         if (entry.getKey().name().equalsIgnoreCase("message")) {
